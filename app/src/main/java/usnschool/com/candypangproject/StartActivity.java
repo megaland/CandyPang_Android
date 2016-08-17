@@ -22,7 +22,6 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -30,9 +29,9 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 public class StartActivity extends AppCompatActivity {
-    private int blockrow = 7;
-    private int blockcol = 7;
-    private Block[][] block = new Block[blockrow][blockcol];
+    private final int BLOCKROW = 7;
+    private final int BLOCKCOL = 7;
+    private Block[][] block = new Block[BLOCKROW][BLOCKCOL];
     private int blockpictures[] = {R.drawable.choa, R.drawable.jin, R.drawable.mably, R.drawable.park, R.drawable.shin};
     private int boompictures[] = {R.drawable.boomone, R.drawable.boomtwo, R.drawable.boomthree};
     private int eachblockwidth;
@@ -53,11 +52,12 @@ public class StartActivity extends AppCompatActivity {
     private MediaPlayer playerone;
     private MediaPlayer playertwo;
     private boolean playerflag = true;
-//fisrt commit
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_start);
         playerone = MediaPlayer.create(this, R.raw.boomsound);
         playertwo = MediaPlayer.create(this, R.raw.boomsound);
@@ -87,18 +87,13 @@ public class StartActivity extends AppCompatActivity {
         @Override
         public boolean onTouchEvent(MotionEvent event) {
             int disappearedcol[] = new int[7];
-            Log.e("currentThread",""+Thread.currentThread());
             blocklist = new ArrayList<>();
             for (int i = 0; i < block.length; i++) {
                 for (int j = 0; j < block[i].length ; j++) {
                     if(block[i][j].getLeft() < event.getX() && event.getX() < block[i][j].getX2()){
                         if(block[i][j].getTop() < event.getY() && event.getY() < block[i][j].getY2()){
-
                             block[i][j].setIschecked(true);
-                            Log.e("block[][] :", i+ " " +j);
-                            Log.e("비트맵넘 : ", ""+block[i][j].getBitmapnum());
                             blocklist.add(block[i][j]);
-                            Log.e(""+block[i][j].getBitmapnum(),"www");
                             int bitmapnum = block[i][j].getBitmapnum();
                             for (int k = 0; k < blocklist.size(); k++) {
                                 //블록 위
@@ -163,7 +158,6 @@ public class StartActivity extends AppCompatActivity {
                 for (int i = 0; i < blocklist.size(); i++) {
                     Log.e(""+blocklist.get(i).getBlockrow(), ""+blocklist.get(i).getBlockcol());
                     blocklist.get(i).setIsexist(false);
-                    //blocklist.get(i).setIschecked(false);
                     disappearedcol[blocklist.get(i).getBlockcol()]++;
                     
                 }
@@ -190,8 +184,6 @@ public class StartActivity extends AppCompatActivity {
 
             for (int i = 0; i < tempblocklist.size(); i++) {
                 tempblocklist.get(i).setBlockrow(tempblocklist.get(i).getBlockrow()+1);
-
-                Log.i("count", ""+i);
             }
 
             Iterator iterator = linkhashset.iterator();
@@ -199,7 +191,6 @@ public class StartActivity extends AppCompatActivity {
             ArrayList<Integer> arrayx2y2list = new ArrayList<>();
             while(iterator.hasNext()){
                 Block tempblock = (Block)iterator.next();
-                Log.e("row :"+tempblock.getBlockrow(),"col"+ tempblock.getBlockcol());
                 int tempblockrow = tempblock.getBlockrow();
                 int tempblockcol = tempblock.getBlockcol();
                 arraylefttoplist.add(block[tempblockrow][tempblockcol].getLeft());
@@ -244,7 +235,7 @@ public class StartActivity extends AppCompatActivity {
             }
             //새로운 블록넣기
             baseleft = 40;
-            basetop = getHeight()- 200 - eachblockheight * blockrow;
+            basetop = getHeight()- 200 - eachblockheight * BLOCKROW;
             ArrayList<Integer> toplist = new ArrayList<>();
             for (int i = 0; i < disappearedcol.length; i++) {
                 if(disappearedcol[i] != 0){
@@ -266,7 +257,7 @@ public class StartActivity extends AppCompatActivity {
                         }
                     }
                 }
-                //SystemClock.sleep(10);
+
                 renewCanvas();
             }
             //새로넣은 블럭 제자리로
@@ -320,7 +311,7 @@ public class StartActivity extends AppCompatActivity {
                     }
                 }
             }
-            Log.e("first rowrandom : "+ rowrandom, "colrandom : " + colrandom);
+
             block[rowrandom][colrandom].setBitmap(randombitmap);
             block[rowrandom][colrandom].setBitmapnum(randombitnum);
 
@@ -353,22 +344,21 @@ public class StartActivity extends AppCompatActivity {
                     }
                 }
             }
-            Log.e("second rowrandom : "+ rowrandom, "colrandom : " + colrandom);
             block[rowrandom][colrandom].setBitmap(randombitmap);
             block[rowrandom][colrandom].setBitmapnum(randombitnum);
 
-            Log.e("Totalscore", "www"+totalscore);
+
             renewCanvas();
             return false;
         }
 
         @Override
         public void surfaceCreated(SurfaceHolder surfaceHolder) {
-            eachblockwidth = (getWidth()-80)/7;
-            eachblockheight = (getWidth()-80)/7;
+            eachblockwidth = (getWidth()-80)/BLOCKCOL;
+            eachblockheight = (getWidth()-80)/BLOCKROW;
             Log.e(""+eachblockwidth, ""+eachblockheight);
             baseleft = 40;
-            basetop = getHeight()- 200 - eachblockheight * blockrow;
+            basetop = getHeight()- 200 - eachblockheight * BLOCKROW;
             //비트맵 객체 생성
             for (int i = 0; i < blockpictures.length; i++) {
                 bitmap[i] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),
@@ -440,14 +430,12 @@ public class StartActivity extends AppCompatActivity {
                 SystemClock.sleep(1000);
                 timesec++;
                 if(timesec == 60){
-                    Log.e("timesec", ""+ timesec);
                     Looper.prepare();
                     AlertDialog.Builder alert = new AlertDialog.Builder(StartActivity.this);
                     TextView textview = new TextView(StartActivity.this);
                     textview.setText(String.valueOf(totalscore));
                     textview.setTextSize(80);
                     textview.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    Log.e("id : "+id, "totalscore : "+totalscore);
                     alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

@@ -47,9 +47,7 @@ public class RecordActivity extends AppCompatActivity {
 
             myrank = ois.readInt();
             myscore = ois.readInt();
-            Log.e("myscore", ""+myscore);
             rankerlist = (ArrayList<RankerData>)ois.readObject();
-            Log.e("getrank :"+rankerlist.get(0).getRank(),"wwwwwww");
         } catch (Exception e) {
             e.printStackTrace();
         }

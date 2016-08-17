@@ -23,7 +23,7 @@ public class ClientSocket {
             @Override
             public void run() {
                 try {
-                    socket = new Socket("192.168.0.92", 7777);
+                    socket = new Socket("192.168.0.24", 7777);
                     Log.e("socket","접속되었습니다.");
                     ois = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
                     Log.e("server로부터",""+ois.readUTF());
